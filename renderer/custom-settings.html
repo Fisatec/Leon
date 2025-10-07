@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Benutzerdefiniert</title>
+  <style>
+    /* Keine Textauswahl (Inputs dürfen markieren) */
+    * { user-select: none; -webkit-user-select: none; }
+    input, textarea, button { user-select: text; -webkit-user-select: text; }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background:#fff;
+      color:#333;
+      display:flex;            /* <- Layout-Grundgerüst */
+      flex-direction:column;   /* Titlebar oben, Rest darunter */
+    }
+    body.dark { background:#2a2a2a; color:#eee; }
+
+    .cs-titlebar {
+      height: 32px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      -webkit-app-region: drag;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 8px 0 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      flex: 0 0 auto;          /* <- feste Höhe oben */
+    }
+    body.dark .cs-titlebar {
+      background: rgba(34,34,34,0.85);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .cs-title { font-size:12px; color:#444; }
+    body.dark .cs-title { color:#ddd; }
+
+    .cs-close {
+      -webkit-app-region: no-drag;
+      width: 24px; height: 24px; border: none; background: transparent;
+      border-radius: 6px; cursor: pointer; font-size: 14px; color: #444;
+    }
+    .cs-close:hover { background: rgba(0,0,0,0.05); }
+    body.dark .cs-close { color:#ddd; }
+    body.dark .cs-close:hover { background: rgba(255,255,255,0.06); }
+
+    /* Wrapper füllt Raum unter der Titlebar, Footer bleibt sichtbar */
+    .wrap {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;   /* nimmt gesamten Rest ein */
+      min-height: 0;    /* wichtig, damit .content korrekt schrumpfen kann */
+      gap: 12px;
+    }
+
+    /* Scrollt nur der Inhalt, nicht die Buttons */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;   /* <- nur hier wird gescrollt */
+    }
+
+    .row { margin-bottom: 0; } /* Abstände durch gap */
+    .hint { font-size: 12px; color: #666; }
+    body.dark .hint { color: #aaa; }
+    label { display:block; font-weight:500; margin-bottom:6px; }
+
+    .size { display:inline-flex; align-items:center; gap:8px; }
+    .size input { width: 100px; padding:8px; text-align:center; border-radius:8px; border:1px solid #ccc; }
+    body.dark .size input { background:#333; color:#eee; border:1px solid #555; }
+
+    .opts { display:grid; gap:8px; }
+
+    /* Footer fix unten */
+    .buttons {
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex: 0 0 auto;
+      padding-top: 4px;
+    }
+    .btn-cancel, .btn-save {
+      padding: 8px 14px; border-radius:8px; border:none; cursor:pointer;
+    }
+    .btn-cancel { background:#eee; }
+    .btn-cancel:hover { background:#ddd; }
+    .btn-save { background:#0078D7; color:#fff; }
+    .btn-save:hover { background:#066dc2; }
+
+    body.dark .btn-cancel { background:#444; color:#eee; }
+    body.dark .btn-cancel:hover { background:#555; }
+  </style>
+</head>
+<body>
+  <div class="cs-titlebar">
+    <div class="cs-title">Benutzerdefinierte Fenster-Einstellungen</div>
+    <button class="cs-close" id="csClose" title="Schließen">✕</button>
+  </div>
+
+  <div class="wrap">
+    <div class="content">
+      <div class="row">
+        <label>Fenstergröße</label>
+        <div class="size">
+          <input type="number" id="width" placeholder="Breite" min="100" max="5000" />
+          ×
+          <input type="number" id="height" placeholder="Höhe" min="100" max="5000" />
+        </div>
+        <div class="hint">Erlaubte Werte: 100–5000 px</div>
+      </div>
+
+      <div class="row">
+        <label>Optionen</label>
+        <div class="opts">
+          <label><input type="checkbox" id="resizable" checked /> Größenänderung erlauben</label>
+          <label><input type="checkbox" id="minimizable" checked /> Minimieren erlauben</label>
+          <label><input type="checkbox" id="maximizable" checked /> Maximieren erlauben</label>
+          <label><input type="checkbox" id="no-scrollbar" /> Keine Scrollbar (Scrollen per Mausrad)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer fix am unteren Rand -->
+    <div class="buttons">
+      <button class="btn-cancel" id="btnCancel">Abbrechen</button>
+      <button class="btn-save" id="btnSave">Speichern</button>
+    </div>
+  </div>
+
+  <script src="custom-settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Léon</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+  <div class="titlebar">
+    <div class="window-controls">
+      <label class="dark-toggle" title="Dark Mode umschalten">
+        🌙
+        <input type="checkbox" id="darkModeToggle" />
+        <span class="slider"></span>
+      </label>
+      <div class="window-buttons">
+        <button id="min-btn" title="Minimieren">—</button>
+        <button id="close-btn" title="Schließen">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay für Dim/Blur wenn Sub-Dialoge offen sind -->
+  <div id="appBackdrop" class="app-backdrop hidden"></div>
+
+  <div class="container">
+    <a
+      class="donate-cta"
+      href="https://www.paypal.com/paypalme/GoeRo"
+      data-external
+      aria-label="Per PayPal spenden"
+      title="Per PayPal spenden"
+    >
+      <!-- PayPal Donate -->
+      <img
+	    id="donateImg"
+	    class="donate-img"
+	    src="../assets/paypal-donate_light.png"
+	    alt="Spenden mit PayPal"
+	    loading="eager"
+	    decoding="async"
+	  />
+    </a>
+
+    <h1 class="app-title">
+	  <img src="../assets/logo.png" alt="Léon" class="title-logo" />
+	  <span class="text">Léon - App Generator</span>
+	</h1>
+	
+	<!-- Language Switcher -->
+	<div class="lang-switch">
+	  <button data-lang="de" class="lang-btn active">DE</button>
+	  <button data-lang="en" class="lang-btn">EN</button>
+	</div>
+	
+    <div class="form-group">
+      <label for="appName">📝 App-Name:</label>
+      <input type="text" id="appName" placeholder="z. B. MyDesktopApp" />
+    </div>
+
+    <div class="form-group">
+      <label for="url">🔗 Website-URL:</label>
+      <input type="text" id="url" placeholder="https://example.com" />
+    </div>
+
+    <div id="faviconPreviewContainer" class="favicon-box">
+      <p class="favicon-title">🔍 Favicon</p>
+      <img id="faviconPreview" src="" alt="Favicon Vorschau" />
+      <div class="favicon-hint">
+        Hinweis: Wenn verfügbar, wird automatisch ein 256×256-Icon verwendet
+      </div>
+
+      <div class="favicon-actions">
+        <a href="#" id="chooseCustomIcon" class="choose-icon-link">
+          Alternativ: eigenes Icon (.ico/.png) wählen
+        </a>
+        <a href="#" id="clearCustomIcon" class="choose-icon-link hidden" style="margin-left:12px;">
+          Entfernen
+        </a>
+      </div>
+
+      <div id="customIconNote" class="custom-icon-note note-slot">&nbsp;</div>
+    </div>
+
+    <div class="form-group">
+      <label for="windowMode">🪟 Fenstergröße:</label>
+      <select id="windowMode">
+        <option value="resizable">Normal (resizable)</option>
+        <option value="mobile">Mobile App (375x670, fix)</option>
+        <option value="custom">Benutzerdefinierte Einstellungen</option>
+      </select>
+      <!-- reservierte Zeile für Summary -->
+      <div id="customSettingsSummary" class="custom-summary summary-slot">&nbsp;</div>
+    </div>
+
+    <div class="form-group">
+      <label for="frameOption">🖼️ Titelleiste:</label>
+      <select id="frameOption">
+        <option value="true">System</option>
+        <option value="false">Benutzerdefinierte Einstellungen</option>
+      </select>
+      <!-- reservierte Zeile für Summary -->
+      <div id="frameSettingsSummary" class="custom-summary summary-slot">&nbsp;</div>
+    </div>
+
+    <div class="form-group center">
+      <button id="generateBtn">🚀 App erstellen</button>
+    </div>
+  </div>
+
+  <!-- Erstellung-Modal (fixe Größe, Spinner + kurzer Log) -->
+  <div id="progressModal" class="modal hidden">
+    <div class="modal-content fixed">
+      <p class="modal-text">⏳ Erstellung läuft...</p>
+
+      <div id="spinnerContainer">
+        <div class="spinner" id="spinnerIcon"></div>
+      </div>
+
+      <div id="progressLog" class="progress-log fixed"></div>
+
+      <!-- Drei Spalten: links, mitte, rechts -->
+      <div class="modal-actions">
+        <div class="ma-left">
+          <button id="openFileBtn" class="modal-button hidden">Datei öffnen</button>
+        </div>
+        <div class="ma-center">
+          <button id="openFolderBtn" class="modal-button hidden">Pfad öffnen</button>
+        </div>
+        <div class="ma-right">
+          <button id="cancelBtn" class="modal-button">Abbrechen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

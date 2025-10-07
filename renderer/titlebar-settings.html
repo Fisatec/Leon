@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Titelleiste – Einstellungen</title>
+  <style>    
+    * { user-select: none; -webkit-user-select: none; }
+    input, button { user-select: text; -webkit-user-select: text; }
+
+    html, body { height: 100%; }
+    body {
+      margin:0; font-family: 'Segoe UI', sans-serif; background:#fff; color:#333;
+      display:flex; flex-direction:column;
+    }
+    body.dark { background:#1f1f1f; color:#eee; }
+
+    .tb-titlebar {
+      height: 32px; background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      -webkit-app-region: drag;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 8px 0 12px; border-bottom: 1px solid rgba(0,0,0,0.06);
+      flex: 0 0 auto;
+    }
+    body.dark .tb-titlebar { background: rgba(30,30,30,0.85); border-bottom:1px solid rgba(255,255,255,0.08); }
+    .tb-title { font-size:12px; color:#444; }
+    body.dark .tb-title { color:#ddd; }
+    .tb-close { -webkit-app-region: no-drag; width: 24px; height: 24px; border:none; background: transparent; border-radius:6px; cursor:pointer; font-size:14px; color:#444;}
+    .tb-close:hover { background: rgba(0,0,0,0.05); }
+    body.dark .tb-close { color:#ddd; } body.dark .tb-close:hover { background: rgba(255,255,255,0.08); }
+
+    /* Gesamter Bereich unterhalb der Titlebar */
+    .wrap {
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      flex: 1 1 auto;
+      min-height:0;
+      gap: 12px;
+    }
+
+    /* Nur hier wird gescrollt, Footer bleibt unten sichtbar */
+    .content {
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      flex: 1 1 auto;
+      min-height:0;
+      overflow:auto;
+    }
+
+    :root {
+      --btn-bg-danger-disabled: #f7eaea; /* Light Mode Hintergrund */
+    }
+
+    body.dark {
+      --btn-bg-danger-disabled: #3a2a2a; /* Dark Mode Hintergrund */
+    }
+
+    .label { font-weight:600; margin-bottom:6px; }
+    .hint { font-size:12px; color:#666; }
+    body.dark .hint { color:#aaa; }
+
+    .segmented {
+      display: inline-flex; border-radius:10px; overflow:hidden; border:1px solid rgba(0,0,0,0.12);
+    }
+    .segmented button {
+      padding:8px 12px; background:#f6f7f9; border:none; cursor:pointer; font-weight:500;
+    }
+    .segmented button.active { background:#0078d7; color:#fff; }
+    body.dark .segmented { border-color:rgba(255,255,255,0.16); }
+    body.dark .segmented button { background:#2a2a2a; color:#ddd; }
+    body.dark .segmented button.active { background:#0b6bd3; color:#fff; }
+
+    .color-row { display:flex; align-items:center; gap:8px; }
+    .color-row input[type="color"] { width:36px; height:24px; padding:0; border:none; background:none; }
+
+    .previewTopbar {
+      border:1px solid rgba(0,0,0,0.12); border-radius:10px; overflow:hidden;
+    }
+    body.dark .previewTopbar { border-color: rgba(255,255,255,0.12); }
+    .topbar {
+      height: 42px; display:flex; align-items:center; justify-content:space-between;
+      padding: 0 10px; border-bottom: 1px solid var(--tb-border);
+      background: var(--tb-bg); color: var(--tb-fg);
+    }
+    .group { display:flex; gap:10px; }
+    .btn {
+      width: 26px; height: 26px; display:flex; align-items:center; justify-content:center;
+      background:transparent; border:none; border-radius:8px; cursor:pointer; color: var(--icon-color);
+      transition: background-color .15s ease, opacity .15s ease;
+    }
+    .btn:hover { background-color: rgba(127,127,127,.12); }
+    .btn img { width:20px; height:20px; display:block; }
+
+    /* Cards */
+    .cards { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .card {
+      border:1px solid rgba(0,0,0,0.12); border-radius:12px; padding:10px;
+      display:flex; align-items:center; gap:10px; background:#fff;
+      min-height: 68px;
+    }
+    .card .thumb { width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:#f6f7f9; flex: 0 0 40px; }
+    .card .thumb svg { width:20px; height:20px; stroke:#9aa3af; opacity:.9; }
+    .card .thumb img { width:20px; height:20px; display:block; }
+    .card .meta { flex: 1 1 auto; min-width: 0; display:flex; flex-direction:column; gap:2px; }
+    .card .title { font-weight:600; font-size:13px; }
+    .card .filename {
+      font-size:12px; color:#666;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* <- fixed Breite, kein Reflow */
+    }
+    .card .actions { display:flex; gap:6px; flex: 0 0 auto; }
+    .iconbtn {
+      width: 32px; height: 32px; display:flex; align-items:center; justify-content:center;
+      border:none; border-radius:8px; background:#eef1f6; cursor:pointer;
+      padding:0;
+    }
+    .iconbtn:hover { background:#e3e7ef; }
+    .iconbtn svg { width:18px; height:18px; stroke:#334155; fill:none; stroke-width:2; }
+    .iconbtn--danger { background:#f7eaea; }
+    .iconbtn--danger:hover { background:#f1d9d9; }
+    .iconbtn--danger svg { stroke:#cc3a3a; }
+
+    body.dark .card { background:#242424; border-color:rgba(255,255,255,0.12); }
+    body.dark .card .thumb { background:#2b2b2b; }
+    body.dark .card .thumb svg { stroke:#a6adbb; }
+    body.dark .card .filename { color:#aaa; }
+    body.dark .iconbtn { background:#333; }
+    body.dark .iconbtn:hover { background:#3a3a3a; }
+    body.dark .iconbtn svg { stroke:#cbd5e1; }
+    body.dark .iconbtn--danger { background:#3a2a2a; }
+    body.dark .iconbtn--danger:hover { background:#442f2f; }
+    body.dark .iconbtn--danger svg { stroke:#ff9b9b; }
+
+    .hidden { display:none; }
+
+    /* Footer/Buttons unten rechts fixiert */
+    .buttons {
+      display:flex; gap:10px; justify-content:flex-end;
+      flex: 0 0 auto;
+      padding-top: 4px;
+    }
+    .btn-primary { padding:8px 14px; border-radius:8px; border:none; background:#0078d7; color:#fff; cursor:pointer; }
+    .btn-primary:hover { background:#066dc2; }
+    .btn-cancel { padding:8px 14px; border-radius:8px; border:none; background:#eee; cursor:pointer; }
+    .btn-cancel:hover { background:#ddd; }
+    body.dark .btn-cancel { background:#444; color:#eee; } body.dark .btn-cancel:hover { background:#555; }
+
+    /* Preview variables default incl. gray icon color */
+    #previewBox { --tb-bg:#ffffff; --tb-fg:#222; --tb-border:rgba(0,0,0,0.08); --icon-color:#6b7280; }
+
+    /* Visuelle Deaktivierung der gesamten Karte (leicht ausgegraut) */
+    .card.disabled {
+      opacity: 0.55;
+    }
+
+    /* Speziell: das "Choose"-Icon wird für deaktivierte Caps inaktiv gemacht */
+    .iconbtn.choose-disabled {
+      opacity: 0.5;
+      cursor: default;
+      pointer-events: none; /* verhindert Klicks auf das Choose-Icon */
+    }
+    
+    .card.disabled .iconbtn--danger {
+      opacity: 0.65;               /* leicht gedimmt */
+      cursor: default;            
+      background-color: var(--btn-bg-danger-disabled);
+    }
+
+    /* Unterdrücke spezifisch das Hover-Feedback für das Danger-Icon in disabled-Karten */
+    .card.disabled .iconbtn--danger:hover {
+      background-color: var(--btn-bg-danger-disabled);
+      transform: none;            /* falls du Hover-Transforms hättest */
+    }    
+  </style>
+</head>
+<body>
+  <div class="tb-titlebar">
+    <div class="tb-title">Titelleiste – Buttons & Theme</div>
+    <button class="tb-close" id="tbClose" title="Schließen">✕</button>
+  </div>
+
+  <div class="wrap">
+    <div class="content">
+      <div class="row">
+        <div class="label">Modus</div>
+        <div class="segmented" id="modeSeg">
+          <button data-mode="svg" class="active">SVG-Buttons (färbbar)</button>
+          <button data-mode="custom">Eigene Buttons (.png/.ico)</button>
+        </div>
+      </div>
+
+      <!-- Color (only svg) -->
+      <div class="row" id="rowColor">
+        <div class="label">Farbe der Buttons</div>
+        <div class="color-row">
+          <input type="color" id="svgColor" value="#6b7280" />
+          <span class="hint">Wirkt auf alle SVG-Buttons</span>
+        </div>
+      </div>
+
+      <!-- Theme -->
+      <div class="row">
+        <div class="label">Topbar Theme</div>
+        <div class="segmented" id="themeSeg" style="margin-bottom:8px;">
+          <button data-theme="light" class="active">Light</button>
+          <button data-theme="dark">Dark</button>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="previewTopbar" id="previewBox">
+          <div class="topbar">
+            <div class="group" id="prevLeft"></div>
+            <div class="group" id="prevRight"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Buttons (clean cards, icon actions) -->
+      <div class="row hidden" id="rowCustom">
+        <div class="label">Eigene Buttons (.png/.ico)</div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </div>
+
+    <!-- Footer fix am unteren Rand -->
+    <div class="buttons">
+      <button class="btn-cancel" id="btnCancel">Abbrechen</button>
+      <button class="btn-primary" id="btnSave">Speichern</button>
+    </div>
+  </div>
+
+  <script src="titlebar-settings.js"></script>
+</body>
+</html>

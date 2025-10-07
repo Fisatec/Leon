@@ -1,0 +1,537 @@
+/* ==========================================================================
+   style.css — aufgeräumt
+   - Struktur in nummerierten Blöcken
+   - Keine Funktionsänderungen, nur Konsolidierung & Entfernen doppelter Regeln
+   ========================================================================== */
+
+/* 0) Grundverhalten / Reset ------------------------------------------------ */
+html, body, body * { user-select: none; -webkit-user-select: none; }
+input, textarea, select { user-select: text; -webkit-user-select: text; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  color: #333;
+}
+
+/* 1) Layout: Container & Typografie --------------------------------------- */
+.container {
+  position: relative;
+  max-width: 600px;
+  margin: 16px auto 0;
+  background: #fff;
+  padding: 26px 26px 14px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.container > *:last-child { margin-bottom: 0; }
+.container > .form-group:last-of-type { margin-bottom: 0; }
+
+h1 { font-size: 24px; margin-bottom: 18px; text-align: center; }
+.form-group { margin-bottom: 16px; }
+
+label { display: block; font-weight: 500; margin-bottom: 6px; }
+
+.hidden { display: none; }
+.center { text-align: center; }
+
+/* 2) Form Controls -------------------------------------------------------- */
+input[type="text"],
+input[type="number"],
+input[type="color"],
+input[type="file"],
+select {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border 0.2s ease, background 0.15s ease, color 0.15s ease;
+}
+input:focus, select:focus { border-color: #0078D7; outline: none; }
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1l5 5 5-5' stroke='%239aa3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+#generateBtn {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  background: #0078D7;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#generateBtn:hover { background: #005fa3; }
+
+/* 3) Titelleiste (Generatorfenster) -------------------------------------- */
+.titlebar {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-app-region: drag;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 10px;
+  position: relative;
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+  height: 100%;
+}
+.window-buttons { display: flex; gap: 6px; }
+
+.window-buttons button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 400;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: font-weight 0.2s ease, color 0.2s ease, background 0.12s ease;
+}
+.window-buttons button:hover { font-weight: bold; }
+.window-buttons button#close-btn:hover { color: #ff4d4d; }
+
+/* 4) Dark Mode (Basiskontraste) ------------------------------------------ */
+body.dark { background: #1e1e1e; color: #eee; }
+body.dark .container { background: #2a2a2a; box-shadow: none; }
+
+body.dark input,
+body.dark select {
+  background: #333;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+body.dark .titlebar {
+  background: rgba(30, 30, 30, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body.dark .window-buttons button { color: #eee; }
+body.dark .window-buttons button#close-btn:hover { color: #ff4d4d; }
+
+/* 5) Dark-Mode Toggle ---------------------------------------------------- */
+.dark-toggle { display: flex; align-items: center; gap: 6px; -webkit-app-region: no-drag; cursor: pointer; }
+.dark-toggle .moon { font-size: 18px; }
+.dark-toggle input[type="checkbox"] { display: none; }
+
+.dark-toggle .slider {
+  position: relative;
+  width: 36px;
+  height: 18px;
+  top: 4px;
+  background-color: #ccc;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+.dark-toggle .slider::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  top: 2px;
+  left: 2px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+#darkModeToggle:checked + .slider { background-color: #0078d7; }
+#darkModeToggle:checked + .slider::before { transform: translateX(18px); }
+
+/* 6) Favicon-Box + feste Hinweiszeile ------------------------------------ */
+#faviconPreview {
+  width: 64px;
+  height: 64px;
+  image-rendering: auto;
+  display: inline-block;
+  border-radius: 8px;
+  border: 1px solid #e0e6ef;
+  background: #fff;
+}
+#faviconPreviewContainer.hidden { display: none; }
+
+.favicon-box {
+  margin-top: 14px;
+  margin-bottom: 24px;
+  padding: 12px 14px;
+  border: 1px dashed #c8d1dc;
+  border-radius: 10px;
+  background: #fafcff;
+  text-align: center;
+  user-select: none;
+}
+body.dark .favicon-box { background: #23262b; border-color: #3b4656; }
+
+.favicon-title { margin: 0 0 8px; font-weight: 600; font-size: 14px; }
+.favicon-hint { font-size: 12px; color: #666; margin-top: 8px; }
+body.dark .favicon-hint { color: #aaa; }
+
+.choose-icon-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #6497e8;
+}
+.choose-icon-link:hover { text-decoration: none; }
+
+.note-slot {
+  height: 18px;
+  line-height: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.custom-icon-note { margin-top: 6px; font-size: 12px; font-style: italic; color: #2b7a0b; }
+body.dark .custom-icon-note { color: #86c784; }
+
+/* 7) Zusammenfassungen unter Selects -------------------------------------- */
+.custom-summary { margin-top: 6px; margin-bottom: 6px; font-size: 12px; font-style: italic; color: #666; }
+body.dark .custom-summary { color: #aaa; }
+
+.summary-slot {
+  height: 18px;
+  line-height: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 8) Erstellung-Modal ---------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+.modal.hidden { opacity: 0; pointer-events: none; }
+
+.modal-content.fixed {
+  width: 440px;
+  min-height: 280px;
+  background: #fff;
+  color: #333;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+body.dark .modal-content.fixed { background: #2a2a2a; color: #eee; }
+
+.modal-text { text-align: center; }
+#spinnerContainer { display: flex; align-items: center; justify-content: center; }
+
+.spinner {
+  border: 4px solid #ccc;
+  border-top: 4px solid #0078D7;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+body.dark .spinner { border: 4px solid #555; border-top: 4px solid #2898ff; }
+
+.progress-log.fixed {
+  font-size: 12px;
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 88px;
+  max-height: 88px;
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+body.dark .progress-log.fixed { background: rgba(255, 255, 255, 0.05); }
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.modal-actions .ma-left,
+.modal-actions .ma-center,
+.modal-actions .ma-right { flex: 1; display: flex; }
+.modal-actions .ma-left  { justify-content: flex-start; }
+.modal-actions .ma-center{ justify-content: center; }
+.modal-actions .ma-right { justify-content: flex-end; }
+
+.modal-button {
+  padding: 8px 18px;
+  font-weight: bold;
+  background: #eee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.modal-button:hover { background: #ddd; }
+body.dark .modal-button { background: #444; color: #eee; }
+body.dark .modal-button:hover { background: #555; }
+
+.close-btn {
+  background: #eee;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.close-btn:hover { background: rgba(255, 0, 0, 0.1); color: #d00; }
+/* dark-mode close hover */
+body.dark .modal-actions .modal-button.close-btn:hover {
+  background: rgba(255, 105, 102, 0.18);
+  color: #fa7a7a;
+}
+
+/* cancel button hover (light & dark) */
+.modal-actions #cancelBtn:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #d00;
+}
+body.dark .modal-actions #cancelBtn:hover {
+  background: rgba(255, 105, 102, 0.18);
+  color: #fa7a7a;
+}
+
+/* 9) App-Overlay (Dim für Sub-Dialoge) ----------------------------------- */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 950;
+}
+.app-backdrop.hidden { display: none; }
+
+/* 10) Donate-Button (leichte Transparenz + Hover) ------------------------- */
+.donate-cta {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-block;
+  opacity: .5;
+  transition: opacity .2s ease, filter .2s ease;
+  text-decoration: none;
+  -webkit-app-region: no-drag;
+}
+
+.donate-cta:hover,
+.donate-cta:focus-visible,
+.donate-cta:focus-within {
+  opacity: 1; /* wrapper bekommt volle Sichtbarkeit beim Hover */
+}
+
+.donate-cta .donate-img {
+  display: block;
+  height: 40px;
+  width: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.08));
+  transition: filter .18s ease, transform .18s ease; /* sanfter Übergang */
+}
+
+.donate-cta:hover .donate-img {
+  filter: brightness(0.98) drop-shadow(0 1px 1px rgba(0,0,0,.12));
+}
+
+/* Dark-Mode: Standard leicht ausgeblendet, beim Hover deutlich hervorgehoben */
+body.dark .donate-cta {
+  opacity: .5;
+}
+
+body.dark .donate-cta:hover,
+body.dark .donate-cta:focus-visible,
+body.dark .donate-cta:focus-within {
+  opacity: 1; /* wichtig: explizit für dark mode setzen */
+}
+
+body.dark .donate-cta .donate-img {
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+}
+
+/* Dark hover: stärker aufhellen + stärkeren Schatten, damit dunkle Bilder sichtbar werden */
+body.dark .donate-cta:hover .donate-img,
+body.dark .donate-cta:focus-visible .donate-img {
+  filter: brightness(1.06) drop-shadow(0 2px 6px rgba(0,0,0,.45));
+}
+
+/* 11) Überschrift mit Logo ------------------------------------------------ */
+.app-title { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.title-logo { height: 80px; width: auto; display: inline-block; }
+
+/* 12) Responsive ---------------------------------------------------------- */
+@media (max-width: 600px) {
+  .container { margin: 0; border-radius: 0; padding: 15px; }
+  .titlebar { border-radius: 0; }
+}
+
+/* 13) Language Switcher (Light & Dark) ----------------------------------- */
+/* - Hovering one button visually "deactivates" the sibling via a gentle fade
+   - Works in Light & Dark mode; includes delayed transition for non-hovered sibling */
+.lang-switch {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+  padding: 4px;
+  border-radius: 20px;
+}
+
+.lang-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #eee;
+  color: #333;
+  transition:
+    background 220ms cubic-bezier(.2,.9,.2,1),
+    color 220ms cubic-bezier(.2,.9,.2,1),
+    opacity 260ms ease,
+    transform 160ms cubic-bezier(.2,.9,.2,1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+}
+
+/* active button */
+.lang-btn.active {
+  background: #0078d7;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(3, 102, 214, 0.15);
+}
+
+/* hovered button — immediate feedback */
+.lang-btn:hover,
+.lang-btn:focus {
+  background: #0078d7;
+  color: #fff;
+  opacity: 1;
+  transition-delay: 0ms;
+}
+
+/* when container hovered, start delayed fade (makes effect gentler) */
+.lang-switch:hover .lang-btn {
+  opacity: 0.6;
+  transition-delay: 120ms;
+}
+.lang-switch .lang-btn:hover {
+  opacity: 1;
+  transition-delay: 0ms;
+}
+
+/* non-hovered, non-active sibling — light mode */
+.lang-switch:hover .lang-btn:not(:hover):not(.active) {
+  background: #e6e9ed;
+  color: #8a8f99;
+  transform: none;
+  transition: background 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              color 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              opacity 240ms ease 120ms;
+}
+
+/* when hovering the switch, keep active slightly distinct (light) */
+.lang-switch:hover .lang-btn.active {
+  opacity: 0.98;
+  transition-delay: 120ms;
+}
+
+/* Dark mode overrides ---------------------------------------------------- */
+body.dark .lang-btn {
+  background: #444;
+  color: #eee;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.12);
+}
+body.dark .lang-btn.active {
+  background: #2898ff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(40,152,255,0.12);
+}
+body.dark .lang-btn:hover,
+body.dark .lang-btn:focus {
+  background: #2898ff;
+  color: #fff;
+  opacity: 1;
+}
+
+/* start delayed fade for dark-mode siblings */
+body.dark .lang-switch:hover .lang-btn { opacity: 0.6; transition-delay: 120ms; }
+
+body.dark .lang-switch:hover .lang-btn:not(:hover):not(.active) {
+  background: #383b40;
+  color: #9aa6bb;
+  transform: none;
+  transition: background 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              color 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              opacity 240ms ease 120ms;
+}
+body.dark .lang-switch .lang-btn:hover { opacity: 1; transition-delay: 0ms; }
+
+/* additionally: when a button is hovered, the active (but not hovered) button
+   should also show a subtle "deactivation" overlay (both Light & Dark) */
+.lang-switch:hover .lang-btn.active:not(:hover) {
+  background: #e9eef6;
+  color: #8a8f99;
+  opacity: 0.6;
+  transition: background 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              color 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              opacity 240ms ease 120ms;
+}
+body.dark .lang-switch:hover .lang-btn.active:not(:hover) {
+  background: #383b40;
+  color: #9aa6bb;
+  opacity: 0.6;
+  transition: background 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              color 240ms cubic-bezier(.2,.9,.2,1) 120ms,
+              opacity 240ms ease 120ms;
+}
+
+/* ========================================================================== */

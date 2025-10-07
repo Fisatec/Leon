@@ -1,0 +1,50 @@
+{
+  "name": "Leon",
+  "version": "1.0.0",
+  "description": "Build an App from any Website",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.0.0",
+    "electron-packager": "^17.1.1"
+  },
+  "build": {
+    "appId": "com.léon.generator",
+    "productName": "Léon",
+    "copyright": "",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "style.css",
+	  "assets/**/*"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png"
+    }
+  },
+  "dependencies": {
+    "png-to-ico": "^3.0.1"
+  }
+}
