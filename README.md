@@ -13,7 +13,7 @@ Léon converts any website into a standalone desktop application using Electron.
 Requirements: 
 >Node.js ≥ 18 and npm
    ```
-   git clone <your-repo-url>
+   git clone https://github.com/fisatec/leon
    cd leon
    npm install
    npm run start
