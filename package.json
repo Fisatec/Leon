@@ -9,12 +9,14 @@
     "pack": "electron-builder --dir"
   },
   "devDependencies": {
-    "electron": "^29.0.0",
-    "electron-builder": "^24.0.0",
-    "electron-packager": "^17.1.1"
+    "electron": "^38.2.2",
+    "electron-builder": "^24.0.0"
+  },
+  "overrides": {
+    "glob": "10.4.5"
   },
   "build": {
-    "appId": "com.léon.generator",
+    "appId": "com.leon.generator",
     "productName": "Léon",
     "copyright": "",
     "directories": {
@@ -25,7 +27,7 @@
       "preload.js",
       "renderer/**/*",
       "style.css",
-	  "assets/**/*"
+      "assets/**/*"
     ],
     "win": {
       "target": "portable",
